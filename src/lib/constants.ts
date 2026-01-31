@@ -1,22 +1,19 @@
-export const SECTORS = [
-  { value: 'education', label: 'التعليم', icon: '📚' },
-  { value: 'health', label: 'الصحة', icon: '🏥' },
-  { value: 'security', label: 'الأمن', icon: '🛡️' },
-  { value: 'administration', label: 'الإدارة', icon: '🏛️' },
-  { value: 'justice', label: 'العدل', icon: '⚖️' },
-  { value: 'finance', label: 'المالية', icon: '💰' },
-  { value: 'transport', label: 'النقل', icon: '🚌' },
-  { value: 'agriculture', label: 'الفلاحة', icon: '🌾' },
-  { value: 'tourism', label: 'السياحة', icon: '✈️' },
-  { value: 'technology', label: 'التكنولوجيا', icon: '💻' },
-  { value: 'other', label: 'أخرى', icon: '📋' },
+export const TOPICS = [
+  { value: 'thoughts', label: 'Thoughts', icon: '💭' },
+  { value: 'confessions', label: 'Confessions', icon: '🎭' },
+  { value: 'relationships', label: 'Relationships', icon: '💕' },
+  { value: 'work', label: 'Work', icon: '💼' },
+  { value: 'dreams', label: 'Dreams', icon: '🔮' },
+  { value: 'opinions', label: 'Opinions', icon: '📢' },
+  { value: 'questions', label: 'Questions', icon: '🤔' },
+  { value: 'venting', label: 'Venting', icon: '😤' },
+  { value: 'advice', label: 'Advice', icon: '💡' },
+  { value: 'stories', label: 'Stories', icon: '📖' },
+  { value: 'other', label: 'Other', icon: '📝' },
 ] as const;
 
-export const MOROCCAN_CITIES = [
-  'الرباط', 'الدار البيضاء', 'فاس', 'مراكش', 'طنجة', 
-  'أكادير', 'مكناس', 'وجدة', 'القنيطرة', 'تطوان',
-  'سلا', 'الناظور', 'خريبكة', 'أسفي', 'الجديدة',
-  'تازة', 'بني ملال', 'العيون', 'الداخلة', 'أخرى'
-];
+// Alias for database compatibility (sector = topic in DB)
+export const SECTORS = TOPICS;
 
-export type JobSector = typeof SECTORS[number]['value'];
+export type TopicType = typeof TOPICS[number]['value'];
+export type JobSector = TopicType;

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { ar } from 'date-fns/locale';
-import { Send, Loader2, Trash2 } from 'lucide-react';
+import { Send, Loader2, Trash2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -29,7 +28,7 @@ interface CommentsSectionProps {
 export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(true); // Default anonymous
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { user, isAdmin } = useAuth();
@@ -85,13 +84,13 @@ export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
       if (error) throw error;
 
       setNewComment('');
-      setIsAnonymous(false);
+      setIsAnonymous(true);
       fetchComments();
       onUpdate();
     } catch (error) {
       toast({
-        title: 'خطأ',
-        description: 'حدث خطأ أثناء إضافة التعليق',
+        title: 'Error',
+        description: 'Failed to add comment',
         variant: 'destructive',
       });
     } finally {
@@ -109,13 +108,13 @@ export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
       fetchComments();
       onUpdate();
       toast({
-        title: 'تم الحذف',
-        description: 'تم حذف التعليق بنجاح',
+        title: 'Deleted',
+        description: 'Comment has been removed.',
       });
     } catch (error) {
       toast({
-        title: 'خطأ',
-        description: 'حدث خطأ أثناء الحذف',
+        title: 'Error',
+        description: 'Failed to delete comment',
         variant: 'destructive',
       });
     }
@@ -130,20 +129,20 @@ export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
       ) : (
         <div className="space-y-3">
           {comments.map((comment) => {
-            const authorName = comment.is_anonymous ? 'مجهول' : (comment.profiles?.nickname || 'مستخدم');
+            const authorName = comment.is_anonymous ? 'Anonymous' : (comment.profiles?.nickname || 'User');
             const isOwner = user?.id === comment.user_id;
             
             return (
               <div key={comment.id} className="flex gap-3 rounded-lg bg-muted/50 p-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                  {comment.is_anonymous ? '؟' : authorName.charAt(0)}
+                  {comment.is_anonymous ? '?' : authorName.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium">{authorName}</p>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ar })}
+                        {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                       </span>
                       {(isOwner || isAdmin) && (
                         <Button
@@ -169,7 +168,7 @@ export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="flex gap-2">
             <Input
-              placeholder="اكتب تعليقاً..."
+              placeholder="Add a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               className="flex-1"
@@ -188,8 +187,9 @@ export function CommentsSection({ postId, onUpdate }: CommentsSectionProps) {
               checked={isAnonymous}
               onCheckedChange={setIsAnonymous}
             />
-            <Label htmlFor="anonymous-comment" className="text-sm">
-              تعليق مجهول
+            <Label htmlFor="anonymous-comment" className="flex items-center gap-1 text-sm">
+              <Shield className="h-3.5 w-3.5" />
+              Anonymous
             </Label>
           </div>
         </form>

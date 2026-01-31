@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/unsaid-logo.png';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +33,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="موظفون" className="h-10 w-auto" />
+          <img src={logo} alt="UNSAID" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
@@ -42,14 +42,14 @@ export function Header() {
             to="/" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
-            الرئيسية
+            Home
           </Link>
           {user && (
             <Link 
               to="/feed" 
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              المنشورات
+              Feed
             </Link>
           )}
         </nav>
@@ -69,37 +69,37 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    {profile?.nickname?.charAt(0) || 'م'}
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-unsaid text-white">
+                    {profile?.nickname?.charAt(0)?.toUpperCase() || '?'}
                   </div>
-                  <span className="hidden md:inline">{profile?.nickname || 'مستخدم'}</span>
+                  <span className="hidden md:inline">{profile?.nickname || 'Anonymous'}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
-                  <User className="ml-2 h-4 w-4" />
-                  الملف الشخصي
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
                 </DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem onClick={() => navigate('/admin')}>
-                    <Shield className="ml-2 h-4 w-4" />
-                    لوحة الإدارة
+                    <Shield className="mr-2 h-4 w-4" />
+                    Admin Dashboard
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
-                  <LogOut className="ml-2 h-4 w-4" />
-                  تسجيل الخروج
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex gap-2">
               <Button variant="ghost" onClick={() => navigate('/login')}>
-                دخول
+                Sign In
               </Button>
-              <Button onClick={() => navigate('/register')} className="bg-gradient-moroccan">
-                تسجيل
+              <Button onClick={() => navigate('/register')} className="bg-gradient-unsaid">
+                Join
               </Button>
             </div>
           )}
@@ -125,7 +125,7 @@ export function Header() {
               className="rounded-lg px-4 py-2 text-sm font-medium hover:bg-muted"
               onClick={() => setIsMenuOpen(false)}
             >
-              الرئيسية
+              Home
             </Link>
             {user && (
               <Link 
@@ -133,7 +133,7 @@ export function Header() {
                 className="rounded-lg px-4 py-2 text-sm font-medium hover:bg-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
-                المنشورات
+                Feed
               </Link>
             )}
             <Button
@@ -142,8 +142,8 @@ export function Header() {
               onClick={toggleTheme}
               className="justify-start"
             >
-              {isDark ? <Sun className="ml-2 h-4 w-4" /> : <Moon className="ml-2 h-4 w-4" />}
-              {isDark ? 'الوضع الفاتح' : 'الوضع الداكن'}
+              {isDark ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+              {isDark ? 'Light Mode' : 'Dark Mode'}
             </Button>
           </nav>
         </div>

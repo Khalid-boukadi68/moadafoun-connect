@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader2, Send } from 'lucide-react';
+import { Loader2, Send, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { SECTORS } from '@/lib/constants';
+import { TOPICS } from '@/lib/constants';
 import type { Database } from '@/integrations/supabase/types';
 
 type JobSector = Database['public']['Enums']['job_sector'];
@@ -20,15 +20,15 @@ interface CreatePostFormProps {
 
 export function CreatePostForm({ onSuccess }: CreatePostFormProps) {
   const [content, setContent] = useState('');
-  const [sector, setSector] = useState<JobSector | ''>('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [topic, setTopic] = useState<JobSector | ''>('');
+  const [isAnonymous, setIsAnonymous] = useState(true); // Default to anonymous
   const [loading, setLoading] = useState(false);
   const { user, profile } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !content.trim() || !sector) return;
+    if (!user || !content.trim() || !topic) return;
 
     setLoading(true);
     try {
@@ -37,24 +37,24 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps) {
         .insert({
           user_id: user.id,
           content: content.trim(),
-          sector: sector,
+          sector: topic,
           is_anonymous: isAnonymous,
         });
 
       if (error) throw error;
 
       setContent('');
-      setSector('');
-      setIsAnonymous(false);
+      setTopic('');
+      setIsAnonymous(true);
       onSuccess();
       toast({
-        title: 'تم النشر!',
-        description: 'تم نشر منشورك بنجاح',
+        title: 'Posted!',
+        description: isAnonymous ? 'Your anonymous post is now live.' : 'Your post is now live.',
       });
     } catch (error: any) {
       toast({
-        title: 'خطأ',
-        description: error.message || 'حدث خطأ أثناء النشر',
+        title: 'Error',
+        description: error.message || 'Failed to create post',
         variant: 'destructive',
       });
     } finally {
@@ -69,11 +69,11 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps) {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              {profile?.nickname?.charAt(0) || 'م'}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-unsaid text-white font-semibold">
+              {isAnonymous ? '?' : (profile?.nickname?.charAt(0)?.toUpperCase() || '?')}
             </div>
             <Textarea
-              placeholder="شارك رأيك أو سؤالك مع الموظفين..."
+              placeholder="What's on your mind? Share it anonymously..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[100px] resize-none"
@@ -82,16 +82,16 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps) {
 
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Select value={sector} onValueChange={(value) => setSector(value as JobSector)}>
+              <Select value={topic} onValueChange={(value) => setTopic(value as JobSector)}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="اختر القطاع" />
+                  <SelectValue placeholder="Select topic" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SECTORS.map((s) => (
-                    <SelectItem key={s.value} value={s.value}>
+                  {TOPICS.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
                       <span className="flex items-center gap-2">
-                        <span>{s.icon}</span>
-                        <span>{s.label}</span>
+                        <span>{t.icon}</span>
+                        <span>{t.label}</span>
                       </span>
                     </SelectItem>
                   ))}
@@ -104,26 +104,27 @@ export function CreatePostForm({ onSuccess }: CreatePostFormProps) {
                   checked={isAnonymous}
                   onCheckedChange={setIsAnonymous}
                 />
-                <Label htmlFor="anonymous" className="text-sm">
-                  نشر مجهول
+                <Label htmlFor="anonymous" className="flex items-center gap-1 text-sm">
+                  <Shield className="h-3.5 w-3.5" />
+                  Anonymous
                 </Label>
               </div>
             </div>
 
             <Button 
               type="submit" 
-              disabled={loading || !content.trim() || !sector}
-              className="bg-gradient-moroccan"
+              disabled={loading || !content.trim() || !topic}
+              className="bg-gradient-unsaid"
             >
               {loading ? (
                 <>
-                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                  جاري النشر...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Posting...
                 </>
               ) : (
                 <>
-                  <Send className="ml-2 h-4 w-4" />
-                  نشر
+                  <Send className="mr-2 h-4 w-4" />
+                  Post
                 </>
               )}
             </Button>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { ar } from 'date-fns/locale';
 import { Shield, AlertTriangle, Trash2, CheckCircle, Loader2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +17,7 @@ import { Layout } from '@/components/layout/Layout';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { SECTORS } from '@/lib/constants';
+import { TOPICS } from '@/lib/constants';
 
 interface Report {
   id: string;
@@ -77,21 +76,21 @@ export default function Admin() {
         .eq('id', reportId);
 
       toast({
-        title: 'تم التحديث',
-        description: 'تم تحديث حالة البلاغ',
+        title: 'Updated',
+        description: 'Report status has been updated.',
       });
       fetchReports();
     } catch (error) {
       toast({
-        title: 'خطأ',
-        description: 'حدث خطأ أثناء التحديث',
+        title: 'Error',
+        description: 'Failed to update report',
         variant: 'destructive',
       });
     }
   };
 
   const handleDeletePost = async (postId: string) => {
-    if (!confirm('هل أنت متأكد من حذف هذا المنشور؟')) return;
+    if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
       await supabase
@@ -100,14 +99,14 @@ export default function Admin() {
         .eq('id', postId);
 
       toast({
-        title: 'تم الحذف',
-        description: 'تم حذف المنشور بنجاح',
+        title: 'Deleted',
+        description: 'Post has been removed.',
       });
       fetchReports();
     } catch (error) {
       toast({
-        title: 'خطأ',
-        description: 'حدث خطأ أثناء الحذف',
+        title: 'Error',
+        description: 'Failed to delete post',
         variant: 'destructive',
       });
     }
@@ -131,36 +130,36 @@ export default function Admin() {
   return (
     <Layout>
       <div className="mx-auto max-w-4xl">
-        <Card className="shadow-moroccan">
+        <Card className="shadow-unsaid">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              لوحة الإدارة
+              Admin Dashboard
             </CardTitle>
             <CardDescription>
-              إدارة البلاغات والمنشورات
+              Manage reports and moderate content
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="pending">
               <TabsList className="mb-4 w-full">
                 <TabsTrigger value="pending" className="flex-1">
-                  قيد المراجعة
+                  Pending
                   {pendingReports.length > 0 && (
-                    <Badge variant="destructive" className="mr-2">
+                    <Badge variant="destructive" className="ml-2">
                       {pendingReports.length}
                     </Badge>
                   )}
                 </TabsTrigger>
                 <TabsTrigger value="reviewed" className="flex-1">
-                  تمت المراجعة
+                  Reviewed
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="pending" className="space-y-4">
                 {pendingReports.length === 0 ? (
                   <div className="py-8 text-center text-muted-foreground">
-                    لا توجد بلاغات قيد المراجعة
+                    No pending reports
                   </div>
                 ) : (
                   pendingReports.map((report) => (
@@ -178,7 +177,7 @@ export default function Admin() {
               <TabsContent value="reviewed" className="space-y-4">
                 {reviewedReports.length === 0 ? (
                   <div className="py-8 text-center text-muted-foreground">
-                    لا توجد بلاغات سابقة
+                    No reviewed reports
                   </div>
                 ) : (
                   reviewedReports.map((report) => (
@@ -196,11 +195,11 @@ export default function Admin() {
         </Card>
 
         <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-          <DialogContent dir="rtl" className="max-w-lg">
+          <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>محتوى المنشور</DialogTitle>
+              <DialogTitle>Post Content</DialogTitle>
               <DialogDescription>
-                المنشور المُبلغ عنه
+                Reported post details
               </DialogDescription>
             </DialogHeader>
             {selectedPost && (
@@ -209,7 +208,7 @@ export default function Admin() {
                   <p className="whitespace-pre-wrap">{selectedPost.content}</p>
                 </div>
                 <Badge variant="secondary">
-                  {SECTORS.find(s => s.value === selectedPost.sector)?.label || selectedPost.sector}
+                  {TOPICS.find(t => t.value === selectedPost.sector)?.label || selectedPost.sector}
                 </Badge>
               </div>
             )}
@@ -235,28 +234,28 @@ function ReportCard({ report, onView, onResolve, onDelete, reviewed }: ReportCar
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-warning" />
-            <span className="font-medium">سبب البلاغ:</span>
+            <span className="font-medium">Reason:</span>
           </div>
           <p className="text-muted-foreground">{report.reason}</p>
           <p className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(report.created_at), { addSuffix: true, locale: ar })}
+            {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
           </p>
         </div>
         
         <div className="flex flex-col gap-2">
           <Button variant="outline" size="sm" onClick={onView}>
-            <Eye className="ml-1 h-4 w-4" />
-            عرض
+            <Eye className="mr-1 h-4 w-4" />
+            View
           </Button>
           {!reviewed && (
             <>
               <Button variant="outline" size="sm" onClick={onResolve} className="text-success">
-                <CheckCircle className="ml-1 h-4 w-4" />
-                تم
+                <CheckCircle className="mr-1 h-4 w-4" />
+                Resolve
               </Button>
               <Button variant="outline" size="sm" onClick={onDelete} className="text-destructive">
-                <Trash2 className="ml-1 h-4 w-4" />
-                حذف
+                <Trash2 className="mr-1 h-4 w-4" />
+                Delete
               </Button>
             </>
           )}

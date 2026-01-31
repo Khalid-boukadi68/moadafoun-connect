@@ -1,32 +1,26 @@
-import React from 'react';
-import './LoadingSpinner.css';
+import { Loader2 } from 'lucide-react';
 
-const LoadingSpinner: React.FC = () => {
+interface LoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  fullScreen?: boolean;
+}
+
+export function LoadingSpinner({ size = 'md', fullScreen = false }: LoadingSpinnerProps) {
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12',
+  };
+
+  if (fullScreen) {
     return (
-        <div className="loading-spinner">
-            <div className="spinner"></div>
-            <style jsx>{` 
-                .loading-spinner {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                }
-                .spinner {
-                    border: 8px solid rgba(255, 255, 255, 0.3);
-                    border-top: 8px solid #3498db;
-                    border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
-                    animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
-        </div>
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} />
+      </div>
     );
-};
+  }
+
+  return <Loader2 className={`${sizeClasses[size]} animate-spin text-primary`} />;
+}
 
 export default LoadingSpinner;

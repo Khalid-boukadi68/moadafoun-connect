@@ -99,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       toast({
-        title: 'خطأ في التسجيل',
+        title: 'Sign up failed',
         description: error.message,
         variant: 'destructive',
       });
@@ -107,8 +107,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     toast({
-      title: 'تم التسجيل بنجاح!',
-      description: 'مرحباً بك في موظفون',
+      title: 'Welcome to UNSAID!',
+      description: 'Your anonymous account has been created.',
     });
   };
 
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       toast({
-        title: 'خطأ في تسجيل الدخول',
+        title: 'Sign in failed',
         description: error.message,
         variant: 'destructive',
       });
@@ -128,8 +128,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     toast({
-      title: 'مرحباً بك!',
-      description: 'تم تسجيل الدخول بنجاح',
+      title: 'Welcome back!',
+      description: 'You are now signed in.',
     });
   };
 
@@ -137,7 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast({
-        title: 'خطأ',
+        title: 'Error',
         description: error.message,
         variant: 'destructive',
       });
@@ -155,7 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       toast({
-        title: 'خطأ',
+        title: 'Error',
         description: error.message,
         variant: 'destructive',
       });
@@ -164,8 +164,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setProfile(prev => prev ? { ...prev, ...data } : null);
     toast({
-      title: 'تم التحديث',
-      description: 'تم تحديث الملف الشخصي بنجاح',
+      title: 'Profile updated',
+      description: 'Your changes have been saved.',
     });
   };
 
