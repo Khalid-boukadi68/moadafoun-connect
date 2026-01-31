@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { CreatePostForm } from '@/components/posts/CreatePostForm';
 import { PostCard } from '@/components/posts/PostCard';
-import { SectorFilter } from '@/components/posts/SectorFilter';
+import { TopicFilter } from '@/components/posts/SectorFilter';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
@@ -23,7 +23,7 @@ type Reaction = {
 export default function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [reactions, setReactions] = useState<Map<string, 'like' | 'dislike'>>(new Map());
-  const [selectedSector, setSelectedSector] = useState<JobSector | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<JobSector | null>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
@@ -35,8 +35,8 @@ export default function Feed() {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (selectedSector) {
-      query = query.eq('sector', selectedSector);
+    if (selectedTopic) {
+      query = query.eq('sector', selectedTopic);
     }
 
     const { data, error } = await query;
@@ -80,14 +80,14 @@ export default function Feed() {
 
   useEffect(() => {
     fetchPosts();
-  }, [selectedSector, user]);
+  }, [selectedTopic, user]);
 
   return (
     <Layout>
       <div className="mx-auto max-w-2xl space-y-6">
         <CreatePostForm onSuccess={fetchPosts} />
         
-        <SectorFilter selected={selectedSector} onChange={(s) => setSelectedSector(s as JobSector | null)} />
+        <TopicFilter selected={selectedTopic} onChange={(t) => setSelectedTopic(t as JobSector | null)} />
 
         {loading ? (
           <div className="flex justify-center py-12">
@@ -95,8 +95,8 @@ export default function Feed() {
           </div>
         ) : posts.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-lg text-muted-foreground">لا توجد منشورات بعد</p>
-            <p className="text-sm text-muted-foreground">كن أول من يشارك!</p>
+            <p className="text-lg text-muted-foreground">No posts yet</p>
+            <p className="text-sm text-muted-foreground">Be the first to share!</p>
           </div>
         ) : (
           <div className="space-y-4">
