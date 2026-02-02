@@ -24,7 +24,7 @@ export default function Register() {
     setLoading(true);
     try {
       await signUp(email, password, nickname, topic);
-      navigate('/feed');
+      navigate('/stories');
     } catch (error) {
       // Error handled in useAuth
     } finally {

@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Layout } from '@/components/layout/Layout';
+import { AppShell } from '@/components/layout/AppShell';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -114,11 +114,11 @@ export default function Admin() {
 
   if (authLoading || loading) {
     return (
-      <Layout>
+      <AppShell>
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </Layout>
+      </AppShell>
     );
   }
 
@@ -128,22 +128,24 @@ export default function Admin() {
   const reviewedReports = reports.filter(r => r.status !== 'pending');
 
   return (
-    <Layout>
-      <div className="mx-auto max-w-4xl">
-        <Card className="shadow-unsaid">
+    <AppShell>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <Shield className="h-6 w-6 text-primary" />
+          Admin Dashboard
+        </h1>
+        
+        <Card className="bg-card border-border rounded-2xl shadow-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              Admin Dashboard
-            </CardTitle>
+            <CardTitle>Reports Management</CardTitle>
             <CardDescription>
-              Manage reports and moderate content
+              Review and moderate reported content
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="pending">
-              <TabsList className="mb-4 w-full">
-                <TabsTrigger value="pending" className="flex-1">
+              <TabsList className="mb-4 w-full bg-muted rounded-xl">
+                <TabsTrigger value="pending" className="flex-1 rounded-lg">
                   Pending
                   {pendingReports.length > 0 && (
                     <Badge variant="destructive" className="ml-2">
@@ -151,7 +153,7 @@ export default function Admin() {
                     </Badge>
                   )}
                 </TabsTrigger>
-                <TabsTrigger value="reviewed" className="flex-1">
+                <TabsTrigger value="reviewed" className="flex-1 rounded-lg">
                   Reviewed
                 </TabsTrigger>
               </TabsList>
@@ -195,7 +197,7 @@ export default function Admin() {
         </Card>
 
         <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-          <DialogContent className="max-w-lg">
+          <DialogContent className="bg-card border-border rounded-2xl max-w-lg">
             <DialogHeader>
               <DialogTitle>Post Content</DialogTitle>
               <DialogDescription>
@@ -204,10 +206,10 @@ export default function Admin() {
             </DialogHeader>
             {selectedPost && (
               <div className="space-y-4">
-                <div className="rounded-lg bg-muted p-4">
+                <div className="rounded-xl bg-muted p-4">
                   <p className="whitespace-pre-wrap">{selectedPost.content}</p>
                 </div>
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="rounded-full">
                   {TOPICS.find(t => t.value === selectedPost.sector)?.label || selectedPost.sector}
                 </Badge>
               </div>
@@ -215,7 +217,7 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
-    </Layout>
+    </AppShell>
   );
 }
 
