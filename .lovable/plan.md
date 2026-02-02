@@ -1,169 +1,241 @@
 
-# UNSAID - Complete Rebranding and Modernization Plan
 
-## Overview
-Transform the current "موظفون" (Moroccan employee forum) into "UNSAID" - a modern, anonymous social media platform where users can share thoughts freely without revealing their identity.
+# Complete UI Redesign - Modern Social Media App Style
 
-## Design Analysis (from uploaded logo)
-The UNSAID logo reveals:
-- **Dark Slate/Navy background** (`#2B3441`)
-- **Orange/Coral gradient** for the chat bubbles (`#E8854C` to `#F5A567`)
-- **Modern, minimal aesthetic** with floating bubbles suggesting anonymous conversation
-- **LTR English-focused** design
+## Problem Analysis
+The current UI looks like a basic website, not a mobile-first social media app like Facebook or Instagram. Based on the reference image provided, we need to implement:
 
----
-
-## Phase 1: Critical Bug Fixes
-
-### 1.1 Fix Corrupted Onboarding.tsx
-- The `src/pages/Onboarding.tsx` file has invalid characters causing build errors
-- Rewrite with proper formatting as a placeholder or remove if not needed
-
-### 1.2 Fix Login.tsx
-- Current Login.tsx uses an external `react-responsive` package that isn't installed
-- Rewrite to use proper Supabase authentication matching the Register.tsx pattern
+1. **Bottom Navigation Bar** - Fixed at bottom with icons (Stories, Sectors, Pulse, About)
+2. **Modern App-like Header** - Slim header with hamburger menu, logo, and action icons
+3. **Card-based Scrolling Feed** - Posts with images, reactions (Agree/Neutral/Disagree)
+4. **Sectors/Categories Page** - List view with icons and descriptions
+5. **Pulse Feature** - Polling/voting system for collective anonymous opinions
+6. **Dark Navy Color Scheme** - Matching the UNSAID branding
 
 ---
 
-## Phase 2: Branding Updates
+## New App Structure
 
-### 2.1 Copy New Logo
-- Copy `user-uploads://file_0000000042a4720aae638af7de0f9ecb.png` to `src/assets/unsaid-logo.png`
-
-### 2.2 Update App Name Everywhere
-| Location | From | To |
-|----------|------|-----|
-| `index.html` | موظفون - منصة الموظفين المغاربة | UNSAID - Speak Freely |
-| All Arabic text references | موظفون | UNSAID |
-
----
-
-## Phase 3: Design System Overhaul
-
-### 3.1 New Color Palette (from logo)
 ```text
-Light Mode:
-- Background: #F8F9FA (light gray)
-- Primary: #E8854C (orange/coral from logo)
-- Secondary: #2B3441 (dark slate from logo)
-- Card: #FFFFFF
-- Accent: #F5A567 (lighter orange)
-
-Dark Mode:
-- Background: #1A1F26 (very dark slate)
-- Primary: #F5A567 (lighter orange)
-- Secondary: #2B3441
-- Card: #242B35
-- Foreground: #F8F9FA
+┌─────────────────────────────┐
+│  ☰   UNSAID          🔔 🔍 │  ← Slim Header
+├─────────────────────────────┤
+│                             │
+│    [Scrollable Content]     │
+│                             │
+│    • Stories/Feed           │
+│    • Post Cards             │
+│    • Sector List            │
+│    • Polls                  │
+│                             │
+├─────────────────────────────┤
+│ 🏠    📊    📈    ℹ️       │  ← Bottom Nav
+│Stories Sectors Pulse About  │
+└─────────────────────────────┘
 ```
 
-### 3.2 Typography
-- Keep Inter font for clean, modern look
-- Remove Arabic-specific Noto Sans Arabic (can keep as fallback)
+---
 
-### 3.3 Layout Direction
-- Change from RTL to LTR (English-focused app)
-- Remove `dir="rtl"` from all components
+## Phase 1: Core Layout Components
+
+### 1.1 Create Mobile App Shell (`src/components/layout/AppShell.tsx`)
+- Mobile-first container with proper safe areas
+- Handles the overall app structure
+- Different from current Layout.tsx
+
+### 1.2 Create Bottom Navigation (`src/components/layout/BottomNav.tsx`)
+- Fixed bottom navigation bar
+- 4 tabs: Stories, Sectors, Pulse, About
+- Active state indicators with orange accent
+- Icons matching reference design
+
+### 1.3 Create App Header (`src/components/layout/AppHeader.tsx`)
+- Slim header with dark navy background
+- Hamburger menu (left)
+- UNSAID logo (center)
+- Notification and search icons (right)
+- Slide-out drawer menu
 
 ---
 
-## Phase 4: Content Localization (Arabic to English)
+## Phase 2: New Page Structure
 
-### 4.1 All UI Text Updates
-**Header:**
-- الرئيسية → Home
-- المنشورات → Feed
-- الملف الشخصي → Profile
-- تسجيل الخروج → Sign Out
-- الوضع الداكن/الفاتح → Dark/Light Mode
+### 2.1 Stories Page (Main Feed) - `/stories` or `/feed`
+- Vertical scrolling feed
+- Post cards with images
+- "Add Story" button at top
+- Infinite scroll
 
-**Authentication:**
-- تسجيل الدخول → Sign In
-- إنشاء حساب جديد → Create Account
-- البريد الإلكتروني → Email
-- كلمة المرور → Password
-- الاسم المستعار → Username/Alias
+### 2.2 Sectors Page - `/sectors`
+- List of category cards
+- Each with icon, title, description
+- Navigate to filtered posts
+- Categories: Tech, Healthcare, Education, Finance, Legal, etc.
 
-**Feed/Posts:**
-- نشر → Post
-- تعليق → Comment
-- نشر مجهول → Post Anonymously
-- إبلاغ → Report
+### 2.3 Pulse Page - `/pulse`
+- Anonymous polls/voting
+- "Sector Pulse" cards with voting options
+- Progress bars showing percentages
+- Collective sentiment display
 
-### 4.2 Constants Update
-- Remove MOROCCAN_CITIES
-- Update SECTORS to more universal topics:
-  - 💭 Thoughts, 💼 Work, 💕 Relationships, 🎭 Confessions, 🔮 Dreams, 📢 Opinions, 🤔 Questions, 📝 Other
+### 2.4 About Page - `/about`
+- App information
+- Privacy policy
+- Community guidelines
 
 ---
 
-## Phase 5: Feature Emphasis on Anonymity
+## Phase 3: Redesigned Post Card
 
-### 5.1 Homepage Redesign
-- Hero: "Share what's on your mind. Stay anonymous."
-- Feature cards emphasizing:
-  - 🎭 Complete Anonymity
-  - 💬 Free Expression
-  - 🔒 Privacy First
-  - 👥 Community Support
+### New Post Card Features (matching reference):
+- Image at top (if present)
+- Sector badge
+- Post content
+- 3-option reactions: Agree ✓ | Neutral ○ | Disagree ✗
+- Percentage display for each reaction
+- More options menu (...)
+- Clean, rounded corners
 
-### 5.2 Default Anonymous Posting
-- Make anonymous posting the DEFAULT (toggle on by default)
-- Emphasize that usernames are optional aliases
+### New Reaction System:
+Change from Like/Dislike to:
+- **Agree** (green checkmark)
+- **Neutral** (gray circle)
+- **Disagree** (red X)
 
 ---
 
-## Phase 6: Component Updates
+## Phase 4: Color System Update
+
+### Updated CSS Variables:
+```css
+/* Dark Navy Theme */
+--background: 222 47% 16%;        /* #1A2234 */
+--card: 222 40% 22%;              /* #252F43 */
+--primary: 25 85% 60%;            /* #E8854C - Orange */
+--secondary: 222 30% 30%;         /* Dark slate */
+--foreground: 0 0% 98%;           /* White text */
+
+/* Reactions */
+--agree: 145 60% 45%;             /* Green */
+--neutral: 220 15% 60%;           /* Gray */
+--disagree: 0 70% 55%;            /* Red */
+```
+
+---
+
+## Phase 5: File Changes Summary
+
+### New Files to Create:
+| File | Purpose |
+|------|---------|
+| `src/components/layout/AppShell.tsx` | Mobile app container |
+| `src/components/layout/BottomNav.tsx` | Bottom navigation |
+| `src/components/layout/AppHeader.tsx` | Slim app header |
+| `src/components/layout/SideDrawer.tsx` | Slide-out menu |
+| `src/pages/Stories.tsx` | Main feed (rename from Feed) |
+| `src/pages/Sectors.tsx` | Category list page |
+| `src/pages/Pulse.tsx` | Polls/voting page |
+| `src/pages/About.tsx` | About/info page |
+| `src/components/posts/StoryCard.tsx` | New post card design |
+| `src/components/posts/PollCard.tsx` | Voting/poll component |
+| `src/components/sectors/SectorCard.tsx` | Sector list item |
 
 ### Files to Modify:
 | File | Changes |
 |------|---------|
-| `index.html` | Title, meta tags, remove RTL |
-| `src/index.css` | New UNSAID color palette |
-| `tailwind.config.ts` | Updated colors and gradients |
-| `src/lib/constants.ts` | New topics instead of Moroccan sectors |
-| `src/pages/Index.tsx` | Complete redesign with UNSAID branding |
-| `src/pages/Login.tsx` | Rewrite with proper auth + English |
-| `src/pages/Register.tsx` | Update to English, modern design |
-| `src/pages/Feed.tsx` | English UI, topic filters |
-| `src/pages/Profile.tsx` | English UI, simplified fields |
-| `src/pages/Admin.tsx` | English UI |
-| `src/pages/Onboarding.tsx` | Fix or remove |
-| `src/components/layout/Header.tsx` | English nav, new logo |
-| `src/components/layout/Layout.tsx` | Remove RTL |
-| `src/components/posts/PostCard.tsx` | Rewrite with proper TypeScript + English |
-| `src/components/posts/CommentsSection.tsx` | English UI |
-| `src/components/posts/CreatePostForm.tsx` | Topics instead of sectors, English |
-| `src/components/posts/SectorFilter.tsx` | Rename to TopicFilter, English |
-| `src/hooks/useAuth.tsx` | English toast messages |
+| `src/index.css` | New dark navy color system |
+| `src/App.tsx` | New routes structure |
+| `src/lib/constants.ts` | Add sector icons/colors |
+| `tailwind.config.ts` | New color tokens |
+
+### Files to Remove/Replace:
+- `src/components/layout/Header.tsx` → Replace with AppHeader
+- `src/components/layout/Layout.tsx` → Replace with AppShell
+- `src/pages/Index.tsx` → Simplify or redirect to /stories
+- `src/pages/Feed.tsx` → Rename to Stories.tsx
 
 ---
 
-## Technical Details
+## Phase 6: Routing Updates
 
-### Database Considerations
-- The existing `job_sector` enum is used throughout
-- We can add new topic values or create a migration to rename
-- For MVP: keep database structure, just update UI labels
-
-### Gradient Updates
-```css
-.bg-gradient-unsaid {
-  background: linear-gradient(135deg, #E8854C 0%, #F5A567 100%);
-}
+```typescript
+// New route structure
+<Routes>
+  <Route path="/" element={<AppShell />}>
+    <Route index element={<Navigate to="/stories" />} />
+    <Route path="stories" element={<Stories />} />
+    <Route path="sectors" element={<Sectors />} />
+    <Route path="sectors/:sector" element={<SectorFeed />} />
+    <Route path="pulse" element={<Pulse />} />
+    <Route path="about" element={<About />} />
+    <Route path="profile" element={<Profile />} />
+  </Route>
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+</Routes>
 ```
 
-### Animation Additions
-- Subtle floating effect for chat bubbles in hero
-- Smooth transitions for anonymous toggle
+---
+
+## Phase 7: Database Considerations
+
+### New reaction_type values:
+Current: `like`, `dislike`
+New: `agree`, `neutral`, `disagree`
+
+A migration may be needed to add the `neutral` option, or we can handle it at the application level.
 
 ---
 
-## Summary of Deliverables
-1. Fix build errors (Onboarding.tsx, Login.tsx)
-2. Copy new UNSAID logo
-3. Complete color system redesign
-4. All text translated to English
-5. RTL → LTR conversion
-6. Anonymous-first user experience
-7. Modern, clean UI matching the logo aesthetic
+## Visual Reference Implementation
+
+### Bottom Navigation Example:
+```tsx
+<nav className="fixed bottom-0 inset-x-0 bg-card border-t">
+  <div className="flex justify-around py-2">
+    <NavItem icon={Home} label="Stories" to="/stories" />
+    <NavItem icon={Grid} label="Sectors" to="/sectors" />
+    <NavItem icon={TrendingUp} label="Pulse" to="/pulse" />
+    <NavItem icon={Info} label="About" to="/about" />
+  </div>
+</nav>
+```
+
+### Story Card Example:
+```tsx
+<Card className="rounded-2xl overflow-hidden">
+  {post.image && <img src={post.image} className="w-full h-48 object-cover" />}
+  <CardContent className="p-4">
+    <Badge>{sector}</Badge>
+    <p className="mt-2">{post.content}</p>
+    <div className="flex justify-between mt-4">
+      <ReactionButton type="agree" count={52} label="Agree" />
+      <ReactionButton type="neutral" count={18} label="Neutral" />
+      <ReactionButton type="disagree" count={30} label="Disagree" />
+    </div>
+  </CardContent>
+</Card>
+```
+
+---
+
+## Implementation Priority
+
+1. **Core Layout** - AppShell, BottomNav, AppHeader (essential structure)
+2. **Color System** - Update to dark navy theme
+3. **Stories Page** - Redesigned feed with new post cards
+4. **Sectors Page** - Category list with navigation
+5. **Pulse Page** - Polling/voting feature
+6. **About Page** - Static information
+7. **Polish** - Animations, transitions, refinements
+
+---
+
+## Technical Notes
+
+- Uses existing Supabase backend (no database changes needed initially)
+- Reaction types can be handled with existing `like`/`dislike` + new frontend logic
+- Mobile-first approach with responsive breakpoints for tablet/desktop
+- Uses existing shadcn/ui components where possible
+- Maintains authentication flow but with updated UI
+
