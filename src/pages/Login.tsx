@@ -20,7 +20,7 @@ export default function Login() {
     setLoading(true);
     try {
       await signIn(email, password);
-      navigate('/feed');
+      navigate('/stories');
     } catch (error) {
       // Error handled in useAuth
     } finally {

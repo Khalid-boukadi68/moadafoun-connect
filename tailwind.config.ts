@@ -62,6 +62,18 @@ export default {
           blue: "hsl(var(--moroccan-blue))",
           "blue-foreground": "hsl(var(--moroccan-blue-foreground))",
         },
+        agree: {
+          DEFAULT: "hsl(var(--agree))",
+          foreground: "hsl(var(--agree-foreground))",
+        },
+        neutral: {
+          DEFAULT: "hsl(var(--neutral))",
+          foreground: "hsl(var(--neutral-foreground))",
+        },
+        disagree: {
+          DEFAULT: "hsl(var(--disagree))",
+          foreground: "hsl(var(--disagree-foreground))",
+        },
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
